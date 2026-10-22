@@ -115,11 +115,16 @@ How to read it:
   a possible compromise: don't just upgrade, investigate and rotate credentials.
 
 Exit status: `0` nothing found, `1` vulnerabilities found, `2` nothing found but a
-source (or OSV itself) couldn't be checked. That makes it easy to drop into CI:
+source (or OSV itself) couldn't be checked. That makes it easy to drop into CI. Run it
+as a plain step, and any nonzero exit fails the build:
 
 ```bash
-python3 scripts/osv_check.py --requirements requirements.txt || echo "check the report above"
+python3 scripts/osv_check.py --requirements requirements.txt
 ```
+
+Don't append `|| true` or `|| echo ...`, which turns a failing scan into a passing
+step. Exit `2` fails the build too, so a run that couldn't reach OSV doesn't pass
+silently.
 
 ## Requirements
 
